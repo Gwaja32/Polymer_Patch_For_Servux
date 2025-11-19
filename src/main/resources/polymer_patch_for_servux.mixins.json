@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "kr.haruserver.polymer_patch_for_servux.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MixinPacketByteBuf",
+    "MixinServuxLitematicaHandler",
+    "MixinServuxTweaksHandler",
+    "MixinServuxEntitiesHandler",
+    "MixinServuxHudHandler",
+    "MixinServuxStructuresHandler"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

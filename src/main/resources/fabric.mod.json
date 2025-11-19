@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "polymer_patch_for_servux",
+  "version": "${version}",
+  "name": "Polymer Patch For Servux",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/user/Polymer Patch For Servux"
+  },
+  "license": "MIT",
+  "icon": "assets/polymer_patch_for_servux/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "kr.haruserver.polymer_patch_for_servux.PolymerPatchForServux"
+    ]
+  },
+  "mixins": [
+    "polymer_patch_for_servux.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "servux": "*",
+    "polymer-bundled": "*"
+  }
+}
