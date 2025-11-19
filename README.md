@@ -1,6 +1,6 @@
 # Polymer Patch For Servux
 
-This is a patch for [Servux](https://modrinth.com/mod/servux) that fixes the phenomenon in which information from mod items using [Polymer](https://modrinth.com/mod/polymer) is delivered to the client without being converted.  
+This is a patch for [Servux](https://modrinth.com/mod/servux) that works well as a server side that fixes the phenomenon that the information of the mod items using the [Polymer](https://modrinth.com/mod/polymer) is not converted and is received to the client.  
 
 Servux and Polymer are required, but not included in this mod.  
 
