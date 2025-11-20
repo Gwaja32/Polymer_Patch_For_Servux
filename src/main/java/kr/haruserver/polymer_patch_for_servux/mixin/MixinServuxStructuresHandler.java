@@ -1,6 +1,5 @@
 package kr.haruserver.polymer_patch_for_servux.mixin;
 
-import fi.dy.masa.servux.dataproviders.StructureDataProvider;
 import fi.dy.masa.servux.network.IServerPayloadData;
 import fi.dy.masa.servux.network.packet.ServuxStructuresHandler;
 import fi.dy.masa.servux.network.packet.ServuxStructuresPacket;
@@ -17,6 +16,8 @@ public class MixinServuxStructuresHandler
     @Inject(method = "encodeStructuresPacket", at = @At("HEAD"))
     private <P extends IServerPayloadData> void beforeEncode(ServerPlayerEntity player, ServuxStructuresPacket packet, CallbackInfo ci)
     {
+        if (!packet.getType().equals(ServuxStructuresPacket.Type.PACKET_S2C_STRUCTURE_DATA_START)) return;
+
         NbtCompound tag = packet.getCompound();
         if (tag == null) return;
         tag.putBoolean("_polymer_patch_for_servux_", true);

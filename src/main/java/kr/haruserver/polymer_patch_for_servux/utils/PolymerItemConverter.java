@@ -43,25 +43,22 @@ public final class PolymerItemConverter {
                 String itemId = compound.getString("id", "");
                 if (!itemId.isEmpty() && !isVanilla(itemId))
                 {
-                    String key = makeCacheKey(itemId, compound);
-                    NbtCompound converted = cache.get(key);
+                    NbtCompound converted = cache.get(itemId);
                     if (converted == null)
                     {
                         try
                         {
-                            callPolymerConvert(compound, key);
+                            callPolymerConvert(compound, itemId);
                         }
                         catch (Throwable ignored) {}
                     } else
                     {
-                        int count = compound.getInt("count").orElseThrow();
                         for (String _key : converted.getKeys()) {
                             NbtElement _element = converted.get(_key);
                             if (_element != null) {
                                 compound.put(_key, _element.copy());
                             }
                         }
-                        compound.putInt("count", count);
                     }
                     return;
                 }
@@ -75,9 +72,7 @@ public final class PolymerItemConverter {
         }
         else if (element instanceof NbtList list)
         {
-            for (int i = 0; i < list.size(); i++)
-            {
-                NbtElement child = list.get(i);
+            for (NbtElement child : list) {
                 walkAndConvert(child);
             }
         }
@@ -87,7 +82,6 @@ public final class PolymerItemConverter {
     {
         ItemStack originalStack = new ItemStack(Registries.ITEM.get(Identifier.of(itemNbt.getString("id").orElseThrow())));
         ItemStack polymerStack = PolymerItemUtils.createItemStack(originalStack, PacketContext.get());
-        polymerStack.setCount(itemNbt.getInt("count", 1));
         if (!(ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, polymerStack).result().orElseThrow() instanceof NbtCompound polymerNbt)) {
             return;
         }
@@ -95,36 +89,18 @@ public final class PolymerItemConverter {
         for (String key : polymerNbt.getKeys()) {
             NbtElement element = polymerNbt.get(key);
             if (element != null) {
-                itemNbt.put(key, element.copy());
-                cacheCompound.put(key, element.copy());
+                if (!key.equals("count")) {
+                    itemNbt.put(key, element.copy());
+                    cacheCompound.put(key, element.copy());
+                }
             }
         }
-        putCache(mapKey, cacheCompound);
+        putCache(mapKey, cacheCompound.copy());
     }
 
     private static boolean isVanilla(String itemId)
     {
         return itemId.startsWith("minecraft:");
-    }
-
-    private static String makeCacheKey(String itemId, NbtCompound compound)
-    {
-        try
-        {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] tagBytes = compound.contains("tag") ? compound.getCompound("tag").toString().getBytes(StandardCharsets.UTF_8) : new byte[0];
-            md.update(itemId.getBytes(StandardCharsets.UTF_8));
-            md.update((byte)':');
-            md.update(tagBytes);
-            byte[] digest = md.digest();
-            StringBuilder sb = new StringBuilder(itemId).append(':');
-            for (int i = 0; i < 8 && i < digest.length; i++) sb.append(String.format("%02x", digest[i]));
-            return sb.toString();
-        }
-        catch (Exception e)
-        {
-            return itemId + ":" + compound.hashCode();
-        }
     }
 
     private static void putCache(String key, NbtCompound value)
