@@ -25,10 +25,7 @@ public class NbtCodecEncoder {
             result.result().ifPresentOrElse(
                     element -> {
                         componentsNbt.put(componentId.toString(), element);
-                    },
-                    () -> {
-                        System.err.println("Skipping component due to Codec failure: " + componentId);
-                    }
+                    }, () -> {}
             );
         }
         return componentsNbt;

@@ -50,9 +50,8 @@ public final class PolymerItemConverter {
                         try
                         {
                             callPolymerConvert(compound, itemId);
-                            System.out.println("success !!!!!!!!!!!!      " + compound);
                         }
-                        catch (Exception e) {System.out.println("실패!!!!!!!!!!!!!!!!!!!!!!" + e);} //Throwable ignored
+                        catch (Exception ignored) {} //Throwable ignored
                     } else
                     {
                         for (String _key : converted.getKeys()) {
