@@ -1,6 +1,9 @@
 package kr.haruserver.polymer_patch_for_servux.utils;
 
+import com.mojang.serialization.DataResult;
+import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
+import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -9,9 +12,6 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.packettweaker.PacketContext;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +23,7 @@ public final class PolymerItemConverter {
     private static final ConcurrentMap<String, NbtCompound> cache = new ConcurrentHashMap<>();
     private static final Deque<String> lru = new ConcurrentLinkedDeque<>();
     private static final Object lruLock = new Object();
+
 
     private PolymerItemConverter() {}
 
@@ -49,8 +50,9 @@ public final class PolymerItemConverter {
                         try
                         {
                             callPolymerConvert(compound, itemId);
+                            System.out.println("success !!!!!!!!!!!!      " + compound);
                         }
-                        catch (Throwable ignored) {}
+                        catch (Exception e) {System.out.println("실패!!!!!!!!!!!!!!!!!!!!!!" + e);} //Throwable ignored
                     } else
                     {
                         for (String _key : converted.getKeys()) {
@@ -81,10 +83,8 @@ public final class PolymerItemConverter {
     private static void callPolymerConvert(NbtCompound itemNbt, String mapKey)
     {
         ItemStack originalStack = new ItemStack(Registries.ITEM.get(Identifier.of(itemNbt.getString("id").orElseThrow())));
-        ItemStack polymerStack = PolymerItemUtils.createItemStack(originalStack, PacketContext.get());
-        if (!(ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, polymerStack).result().orElseThrow() instanceof NbtCompound polymerNbt)) {
-            return;
-        }
+        NbtCompound polymerNbt = NbtCodecEncoder.encodeFilamentStackSelectively(originalStack);
+
         NbtCompound cacheCompound = new NbtCompound();
         for (String key : polymerNbt.getKeys()) {
             NbtElement element = polymerNbt.get(key);
