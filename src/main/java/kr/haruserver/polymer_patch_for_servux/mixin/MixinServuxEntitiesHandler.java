@@ -3,7 +3,6 @@ package kr.haruserver.polymer_patch_for_servux.mixin;
 import fi.dy.masa.servux.network.IServerPayloadData;
 import fi.dy.masa.servux.network.packet.ServuxEntitiesHandler;
 import fi.dy.masa.servux.network.packet.ServuxEntitiesPacket;
-import fi.dy.masa.servux.network.packet.ServuxHudPacket;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
